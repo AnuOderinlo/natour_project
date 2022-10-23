@@ -7,7 +7,7 @@ const tourSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  durations: {
+  duration: {
     type: Number,
     required: [true, 'A tour must have a duration'],
   },
@@ -46,6 +46,11 @@ const tourSchema = new mongoose.Schema({
     required: [true, 'A tour should have a cover Image'],
   },
   images: [String],
+  cratedAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  startDates: [Date],
 });
 
 //create a model from the schema

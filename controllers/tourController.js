@@ -1,35 +1,5 @@
 const Tour = require('./../models/tourModel');
 
-/**
- * This is param middleware
- * To check a valid ID
- * @param {*} req
- * @param {*} res
- * @param {*} next
- * @param {*} id
- * @returns
- */
-// exports.checkId = (req, res, next, id) => {
-//   if (id * 1 > tours.length) {
-//     return res.status(404).json({
-//       status: 'failed',
-//       message: 'Invalid Id',
-//     });
-//   }
-
-//   next();
-// };
-
-// exports.checkBody = (req, res, next) => {
-//   if (!req.body.name || !req.body.price) {
-//     return res.status(400).json({
-//       status: 'failed',
-//       message: 'Name or Price is required',
-//     });
-//   }
-//   next();
-// };
-
 exports.createTour = async (req, res) => {
   try {
     const newTour = await Tour.create(req.body);
