@@ -1,0 +1,18 @@
+{
+  "name": "tourapp",
+  "version": "1.0.0",
+  "description": "Learning Nodejs, Express and MongoDb",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "start:prod": "NODE_ENV=production nodemon server.js"
+  },
+  "author": "anuoluwapo",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "mongoose": "^5.13.15",
+    "morgan": "^1.10.0"
+  }
+}
