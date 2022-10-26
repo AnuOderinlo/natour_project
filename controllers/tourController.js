@@ -37,10 +37,16 @@ exports.getAllTours = async (req, res) => {
 
     // SORTING
     if (req.query.sort) {
-      query = query.sort(req.query.sort.replace(',', ' '));
-      console.log(req.query, queryObj);
+      query = query.sort(req.query.sort.replaceAll(',', ' '));
+      // console.log(req.query, queryObj);
     } else {
       query = query.sort('-createdAt');
+    }
+
+    // FIELD Limiting
+    if (req.query.fields) {
+      query = query.select(req.query.fields.replaceAll(',', ' '));
+      console.log(req.query.fields.replaceAll(',', ' '));
     }
 
     // const query = await Tour.find()
