@@ -1,4 +1,5 @@
 const Tour = require('./../models/tourModel');
+const ApiFeatures = require('./../utils/apiFeatures');
 
 exports.topTours = (req, res, next) => {
   req.query.limit = '5';
@@ -30,45 +31,44 @@ exports.createTour = async (req, res) => {
 exports.getAllTours = async (req, res) => {
   try {
     // console.log(req.query);
-    //BUILD THE QUERY
-    let queryObj = { ...req.query };
+    // //BUILD THE QUERY
+    // let queryObj = { ...req.query };
 
-    const excludedFields = ['page', 'sort', 'limit', 'fields'];
-    excludedFields.forEach((el) => delete queryObj[el]);
+    // const excludedFields = ['page', 'sort', 'limit', 'fields'];
+    // excludedFields.forEach((el) => delete queryObj[el]);
 
-    // ADVANCE FILTERING
-    queryObj = JSON.stringify(queryObj);
-    queryObj = JSON.parse(
-      queryObj.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
-    );
-    let query = Tour.find(queryObj);
+    // // ADVANCE FILTERING
+    // queryObj = JSON.stringify(queryObj);
+    // queryObj = JSON.parse(
+    //   queryObj.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`)
+    // );
+    // let query = Tour.find(queryObj);
 
-    // SORTING
-    if (req.query.sort) {
-      query = query.sort(req.query.sort.replaceAll(',', ' '));
-      // console.log(req.query, queryObj);
-    } else {
-      // query = query.sort('-createdAt');
-    }
+    // // SORTING
+    // if (req.query.sort) {
+    //   query = query.sort(req.query.sort.replaceAll(',', ' '));
+    //   // console.log(req.query, queryObj);
+    // } else {
+    //   // query = query.sort('-createdAt');
+    // }
 
-    // FIELD Limiting
-    if (req.query.fields) {
-      query = query.select(req.query.fields.replaceAll(',', ' '));
-      console.log(req.query.fields.replaceAll(',', ' '));
-    }
+    // // FIELD Limiting
+    // if (req.query.fields) {
+    //   query = query.select(req.query.fields.replaceAll(',', ' '));
+    //   console.log(req.query.fields.replaceAll(',', ' '));
+    // }
 
-    //PAGINATION
-    const page = req.query.page * 1 || 1;
-    const limit = req.query.limit * 1 || 10;
-    const skip = (page - 1) * limit;
+    // //PAGINATION
+    // const page = req.query.page * 1 || 1;
+    // const limit = req.query.limit * 1 || 10;
+    // const skip = (page - 1) * limit;
 
-    query = query.skip(skip).limit(limit);
-    console.log(req.query);
+    // query = query.skip(skip).limit(limit);
 
-    if (req.query.page) {
-      const numTours = await Tour.countDocument();
-      if (skip > numTours) throw new Error('This page does not exist');
-    }
+    // if (req.query.page) {
+    //   const numTours = await Tour.countDocument();
+    //   if (skip > numTours) throw new Error('This page does not exist');
+    // }
 
     // const query = await Tour.find()
     //   .where('duration')
@@ -76,8 +76,16 @@ exports.getAllTours = async (req, res) => {
     //   .where('difficulty')
     //   .equals('easy');
 
+    const features = new ApiFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+
+    // console.log(features);
+
     //EXECUTE QUERY
-    const tours = await query;
+    const tours = await features.query;
 
     res.status(200).json({
       status: 'Success',
@@ -87,6 +95,7 @@ exports.getAllTours = async (req, res) => {
       },
     });
   } catch (err) {
+    console.log(err);
     res.status(400).json({
       status: 'Failed',
       message: err,
