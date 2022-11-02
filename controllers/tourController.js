@@ -21,6 +21,7 @@ exports.createTour = async (req, res) => {
       data: newTour,
     });
   } catch (err) {
+    // console.log(err);
     res.status(400).json({
       status: 'Failed',
       message: `Unable to create a Tour, ${err}`,
