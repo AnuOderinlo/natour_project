@@ -5,6 +5,9 @@ const morgan = require('morgan');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorController');
+
 const app = express();
 
 app.use(express.json());
@@ -32,10 +35,13 @@ app.use('/api/v1/users', userRouter);
 
 //Handling unhandled Routes
 app.all('*', (req, res, next) => {
-  res.status(404).json({
-    status: 'fail',
-    message: `Can't find this ${req.originalUrl} on this server`,
-  });
+  next(
+    new AppError(`Can't find this ${req.originalUrl} route on this server`, 404)
+  );
 });
+
+// Handling global Error
+
+app.use(globalErrorHandler);
 
 module.exports = app;
