@@ -21,6 +21,9 @@ const handleValidationErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
+const handleTokenError = (err) =>
+  new AppError('Invalid token, please log in again', 401);
+
 const sendErrorDev = (err, res) => {
   console.log(err.message);
   res.status(err.statusCode).json({
@@ -61,6 +64,8 @@ module.exports = (err, req, res, next) => {
     if (err.name === 'CastError') error = handleCastErrorDB(error);
     if (err.code === 11000) error = handleDuplicateField(err);
     if (err.name === 'ValidationError') error = handleValidationErrorDB(err);
+    if (err.name === 'JsonWebTokenError') error = handleTokenError(err);
+
     sendErrorProd(error, res);
   }
 };
