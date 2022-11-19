@@ -63,12 +63,26 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   // Verify the token
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET); //this is not needed
+  // const decoded = jwt.verify(token, process.env.JWT_SECRET);// this is better
+
+  // Check if user still exist
   const freshUser = await User.findOne({ _id: decoded.id });
   if (!freshUser)
     return next(
       new AppError('The user with the token doesnt exist again', 401)
     );
 
+  // Check if user changed password after the token was issued
+  if (freshUser.changePasswordAfter(decoded.iat)) {
+    return next(
+      new AppError(
+        'User recently change their password, please log in again',
+        401
+      )
+    );
+  }
+
+  req.user = freshUser;
   next();
 });
