@@ -1,6 +1,4 @@
 const express = require('express');
-
-const path = require('path');
 const morgan = require('morgan');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -34,7 +32,7 @@ app.use((req, res, next) => {
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
-//Handling unhandled Routes
+//Error Handling unhandled Routes
 app.all('*', (req, res, next) => {
   next(
     new AppError(`Can't find this ${req.originalUrl} route on this server`, 404)
