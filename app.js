@@ -6,6 +6,13 @@ const userRouter = require('./routes/userRoutes');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 
+const rateLimiter = require('express-rate-limit');
+const limiter = rateLimiter({
+  windowMs: 60 * 60 * 1000, // 60mins or 1 hour
+  max: 100,
+  message: 'Too many request from this IP, please try again in an hour',
+});
+
 const app = express();
 
 app.use(express.json());
@@ -28,6 +35,8 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use('/api', limiter);
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

@@ -24,12 +24,14 @@ exports.getAllUsers = catchAsync(async (req, res) => {
     users,
   });
 });
+
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'failed',
     message: 'Yet to implement this route',
   });
 };
+
 exports.getUser = (req, res) => {
   res.status(500).json({
     status: 'failed',
