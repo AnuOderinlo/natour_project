@@ -9,7 +9,8 @@ const globalErrorHandler = require('./controllers/errorController');
 const rateLimiter = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss');
+const xss = require('xss-clean');
+const hpp = require('hpp');
 
 const app = express();
 //Development logging
@@ -38,11 +39,18 @@ app.use(mongoSanitize());
 // Data sanitization against XSS
 app.use(xss());
 
-// app.use((req, res, next) => {
-//   console.log('Hello from a middleware');
-
-//   next();
-// });
+//Prevent Parameter population
+app.use(
+  hpp({
+    whitelist: [
+      'duration',
+      'ratingsAverage',
+      'ratingQuantity',
+      'maxGroupSize',
+      'price',
+    ],
+  })
+);
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
