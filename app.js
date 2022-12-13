@@ -8,6 +8,8 @@ const globalErrorHandler = require('./controllers/errorController');
 
 const rateLimiter = require('express-rate-limit');
 const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss');
 
 const app = express();
 //Development logging
@@ -29,6 +31,12 @@ const limiter = rateLimiter({
 //Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
 app.use(express.static(`${__dirname}/public`));
+
+//Data sanitization against NOSQL injection
+app.use(mongoSanitize());
+
+// Data sanitization against XSS
+app.use(xss());
 
 // app.use((req, res, next) => {
 //   console.log('Hello from a middleware');
