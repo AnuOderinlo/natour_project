@@ -86,7 +86,7 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 //   });
 // });
 
-exports.deleteTour = HandleFactory.deleteOne('Tour');
+exports.deleteTour = HandleFactory.deleteOne(Tour);
 
 exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([

@@ -3,6 +3,7 @@ const AppError = require('../utils/appError');
 
 exports.deleteOne = (Model) => {
   return catchAsync(async (req, res, next) => {
+    console.log(Model);
     const doc = await Model.findByIdAndDelete(req.params.id);
     if (!doc) {
       return next(new AppError(`No document with such ID`, 404));
