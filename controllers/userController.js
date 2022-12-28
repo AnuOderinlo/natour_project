@@ -2,6 +2,7 @@ const User = require('./../models/userModel');
 const ApiFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const HandleFactory = require('./handlerFactory');
 
 const filterObj = (obj, ...fields) => {
   const newObj = {};
@@ -39,6 +40,7 @@ exports.getUser = (req, res) => {
   });
 };
 
+//This API is for the user to update
 exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(
@@ -74,15 +76,19 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: 'failed',
-    message: 'Yet to implement this route',
-  });
-};
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'failed',
-    message: 'Yet to implement this route',
-  });
-};
+// exports.updateUser = (req, res) => {
+//   res.status(500).json({
+//     status: 'failed',
+//     message: 'Yet to implement this route',
+//   });
+// };
+// exports.deleteUser = (req, res) => {
+//   res.status(500).json({
+//     status: 'failed',
+//     message: 'Yet to implement this route',
+//   });
+// };
+
+//This API is for the administrator to update and do Not update the password with this
+exports.updateUser = HandleFactory.updateOne(User);
+exports.deleteUser = HandleFactory.deleteOne(User);
