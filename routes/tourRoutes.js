@@ -19,7 +19,9 @@ const router = express.Router();
 //     reviewController.createReview
 //   );
 
-router.use('/:tourId/reviews', reviewRouter);
+authController.protect,
+  authController.restrictTo('user'),
+  router.use('/:tourId/reviews', reviewRouter);
 
 router
   .route('/top-5-tours')
@@ -27,17 +29,23 @@ router
 
 router.route('/tour-stats').get(tourController.getTourStats);
 
-router.route('/montly-plan/:year').get(tourController.getMontlyPlan);
+router
+  .route('/monthly-plan/:year')
+  .get(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide', 'guide'),
+    tourController.getMonthlyPlan
+  );
 
 router
   .route('/')
-  .get(authController.protect, tourController.getAllTours)
+  .get(tourController.getAllTours)
   .post(tourController.createTour);
 
 router
   .route('/:id')
   .get(tourController.getTour)
-  .patch(tourController.updateTour)
+  .patch(authController.protect, tourController.updateTour)
   .delete(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide'),
