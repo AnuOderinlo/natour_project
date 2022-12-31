@@ -11,32 +11,21 @@ exports.setTourUserIds = (req, res, next) => {
   next();
 };
 
-// exports.createReview = catchAsync(async (req, res, next) => {
+exports.createReview = HandleFactory.createOne(Review);
 
-//   const newReview = await Review.create(req.body);
+// exports.getAllReviews = catchAsync(async (req, res, next) => {
+//   let filter = {};
+//   if (req.params.tourId) filter = { tour: req.params.tourId };
+//   const reviews = await Review.find(filter);
 
-//   // console.log(newTour._id);
-
-//   res.status(201).json({
+//   res.status(200).json({
 //     status: 'success',
-//     message: 'Successfully created a review',
-//     data: newReview,
+//     result: reviews.length,
+//     reviews,
 //   });
 // });
 
-exports.createReview = HandleFactory.createOne(Review);
-
-exports.getAllReviews = catchAsync(async (req, res, next) => {
-  let filter = {};
-  if (req.params.tourId) filter = { tour: req.params.tourId };
-  const reviews = await Review.find(filter);
-
-  res.status(200).json({
-    status: 'success',
-    result: reviews.length,
-    reviews,
-  });
-});
-
+exports.getAllReviews = HandleFactory.getAll(Review);
+exports.getReview = HandleFactory.getOne(Review);
 exports.updateReview = HandleFactory.updateOne(Review);
 exports.deleteReview = HandleFactory.deleteOne(Review);

@@ -24,40 +24,8 @@ exports.createTour = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  const features = new ApiFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-
-  // console.log(features);
-
-  //EXECUTE QUERY
-  const tours = await features.query;
-
-  res.status(200).json({
-    status: 'Success',
-    result: tours.length,
-    tours,
-  });
-});
-
-exports.getTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id).populate({
-    path: 'guides',
-    select: '-__v -passwordChangeAt',
-  }).populate;
-  if (!tour) {
-    return next(new AppError(`No tour with such ID`, 404));
-  }
-
-  res.status(200).json({
-    status: 'Success',
-    tour,
-  });
-});
-
+exports.getAllTours = HandleFactory.getAll(Tour);
+exports.getTour = HandleFactory.getOne(Tour, { path: 'reviews' });
 exports.createTour = HandleFactory.createOne(Tour);
 exports.updateTour = HandleFactory.updateOne(Tour);
 exports.deleteTour = HandleFactory.deleteOne(Tour);

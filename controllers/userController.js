@@ -16,28 +16,17 @@ const filterObj = (obj, ...fields) => {
   return newObj;
 };
 
-exports.getAllUsers = catchAsync(async (req, res) => {
-  const users = await User.find();
-
-  res.status(200).json({
-    status: 'Success',
-    result: users.length,
-    users,
-  });
-});
-
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: 'failed',
-    message: 'Yet to implement this route',
+    message: 'Yet to implement this route. please use the /signup',
   });
 };
 
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: 'failed',
-    message: 'Yet to implement this route',
-  });
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+
+  next();
 };
 
 //This API is for the user to update
@@ -88,6 +77,9 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 //     message: 'Yet to implement this route',
 //   });
 // };
+
+exports.getUser = HandleFactory.getOne(User);
+exports.getAllUsers = HandleFactory.getAll(User);
 
 //This API is for the administrator to update and do Not update the password with this
 exports.updateUser = HandleFactory.updateOne(User);
